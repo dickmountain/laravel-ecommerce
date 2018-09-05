@@ -1,5 +1,5 @@
 <template>
-  <p>ППП</p>
+	<p>ППП</p>
 </template>
 
 <script>

@@ -13,6 +13,12 @@ module.exports = {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
+  modules: [
+  	'@nuxtjs/axios'
+  ],
+  axios: {
+  	baseURL: 'http://homestead.test/api'
+  },
   css: [
     '~/assets/styles/app.scss'
   ],
