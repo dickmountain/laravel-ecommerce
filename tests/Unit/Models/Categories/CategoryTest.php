@@ -4,8 +4,6 @@ namespace Tests\Unit\Models\Categories;
 
 use App\Models\Category;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class CategoryTest extends TestCase
 {
