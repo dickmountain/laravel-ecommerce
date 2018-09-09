@@ -1,5 +1,9 @@
 <template>
-	<p>ППП</p>
+	<div class="section">
+		<div class="container is-fluid">
+
+		</div>
+	</div>
 </template>
 
 <script>

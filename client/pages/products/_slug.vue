@@ -33,7 +33,6 @@
 				product: null
 			}
 		},
-
 		async asyncData ({ params, app }) {
 			let response = await app.$axios.$get(`products/${params.slug}`)
 
