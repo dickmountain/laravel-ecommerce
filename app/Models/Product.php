@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use App\Scoping\Scoper;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Traits\CanBeScoped;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+	use CanBeScoped;
+
 	protected $fillable = [
 		'name',
 		'slug',
@@ -19,11 +20,6 @@ class Product extends Model
 	{
 		return 'slug';
     }
-
-	public function scopeWithScopes(Builder $builder, $scopes = [])
-	{
-		return (new Scoper(request()))->apply($builder, $scopes);
-	}
 
 	public function categories()
 	{
