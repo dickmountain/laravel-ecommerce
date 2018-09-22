@@ -17,10 +17,10 @@ class CreateProductVariationStockView extends Migration
 		DB::statement("
 			CREATE VIEW product_variation_stock_view AS
 				SELECT
-					product_variations.product_id,
+					product_variations.product_id AS product_id,
 					product_variations.id AS product_variation_id,
-					COALESCE(SUM(stocks.quantity) - SUM(product_variation_order.quantity), 0) AS stock,
-					CASE WHEN COALESCE(SUM(stocks.quantity) - SUM(product_variation_order.quantity), 0) > 0
+					COALESCE(SUM(stocks.quantity) - COALESCE(SUM(product_variation_order.quantity), 0), 0) AS stock,
+					CASE WHEN COALESCE(SUM(stocks.quantity) - COALESCE(SUM(product_variation_order.quantity), 0), 0) > 0
 						THEN TRUE
 						ELSE FALSE
 					END in_stock
