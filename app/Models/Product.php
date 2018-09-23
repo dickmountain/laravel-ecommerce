@@ -23,6 +23,18 @@ class Product extends Model
 		return 'slug';
     }
 
+	public function isInStock()
+	{
+		return $this->getStockCount() > 0;
+	}
+
+	public function getStockCount()
+	{
+		return $this->variations->sum(function ($variation) {
+			return $variation->getStockCount();
+		});
+	}
+
 	public function categories()
 	{
 		return $this->belongsToMany(Category::class);
