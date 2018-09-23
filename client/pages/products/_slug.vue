@@ -10,11 +10,16 @@
 						<h1 class="title is-4">
 							{{ product.name }}
 						</h1>
+
 						<p v-if="product.description">
 							{{ product.description }}
 						</p>
 
 						<hr>
+
+						<span class="tag is-rounded is-medium is-dark" v-if="!product.in_stock">
+				            Out of stock
+				        </span>
 
 						<span class="tag is-rounded is-medium">
 				            {{ product.price }}
