@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Products;
+namespace Tests\Unit\Models\Products;
 
 use App\Ecommerce\Money;
 use App\Models\Category;
