@@ -14,8 +14,28 @@ module.exports = {
     ]
   },
   modules: [
-  	'@nuxtjs/axios'
+  	'@nuxtjs/axios',
+  	'@nuxtjs/auth'
   ],
+  auth: {
+  	strategies: {
+  	  local: {
+  	  	endpoints: {
+		  login: {
+		    url: 'auth/login',
+			method: 'post',
+			propertyName: 'meta.token'
+		  },
+		  user: {
+			url: 'auth/me',
+			method: 'get',
+			propertyName: 'data'
+		  }
+	    }
+
+      }
+    }
+  },
   axios: {
   	baseURL: 'http://homestead.test/api'
   },
@@ -30,6 +50,11 @@ module.exports = {
   ** Build configuration
   */
   build: {
+  	postcss: {
+  	  plugins: {
+  	  	'postcss-custom-properties': false
+      }
+    },
     /*
     ** Run ESLint on save
     */
