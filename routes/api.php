@@ -9,4 +9,8 @@ Route::group(['prefix' => 'auth'], function () {
 	Route::get('me', 'Auth\MeController@action');
 });
 
-Route::resource('cart', 'Cart\CartController');
+Route::resource('cart', 'Cart\CartController', [
+	'parameters' => [
+		'cart' => 'productVariation'
+	]
+]);

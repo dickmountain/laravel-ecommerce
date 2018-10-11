@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Cart;
 use App\Ecommerce\Cart;
 use App\Http\Requests\Cart\CartStoreRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cart\CartUpdateRequest;
+use App\Models\ProductVariation;
 
 class CartController extends Controller
 {
@@ -17,4 +19,9 @@ class CartController extends Controller
 	{
 		$cart->add($request->products);
     }
+
+	public function update(ProductVariation $productVariation, CartUpdateRequest $request, Cart $cart)
+	{
+		$cart->update($productVariation->id, $request->quantity);
+	}
 }
