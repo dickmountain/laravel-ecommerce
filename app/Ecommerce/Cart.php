@@ -45,4 +45,14 @@ class Cart
 
 		return 0;
 	}
+
+	public function delete($productId)
+	{
+		$this->user->cart()->detach($productId);
+	}
+
+	public function empty()
+	{
+		$this->user->cart()->detach();
+	}
 }
