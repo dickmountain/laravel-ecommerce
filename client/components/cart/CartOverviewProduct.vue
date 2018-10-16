@@ -24,12 +24,13 @@
 			{{ product.total }}
 		</td>
 		<td>
-			<a href="">Remove</a>
+			<a href="." @click.prevent="destroy(product.id)">Remove</a>
 		</td>
 	</tr>
 </template>
 
 <script>
+	import { mapActions } from 'vuex';
 	export default {
 		name: 'CartOverviewProduct',
 		props: {
@@ -37,8 +38,13 @@
 				required: true,
 				type: Object
 			}
+		},
+		methods: {
+			...mapActions({
+				destroy: 'cart/destroy'
+			})
 		}
-	}
+	};
 </script>
 
 <style scoped>
