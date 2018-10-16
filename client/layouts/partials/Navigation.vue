@@ -45,7 +45,9 @@
 					<template v-else>
 						<a href="#" class="navbar-item">{{ $auth.user.name }}</a>
 						<a href="#" class="navbar-item">Orders</a>
-						<a href="#" class="navbar-item">Cart (0)</a>
+						<nuxt-link :to="{ nane: 'cart' }" class="navbar-item">
+							Cart ({{ cartCount }})
+						</nuxt-link>
 					</template>
 				</div>
 			</div>
@@ -58,7 +60,8 @@
 	export default {
 		computed: {
 			...mapGetters({
-				categories: 'categories'
+				categories: 'categories',
+				cartCount: 'cart/count'
 			})
 		}
 	}
