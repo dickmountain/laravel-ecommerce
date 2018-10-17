@@ -21,7 +21,7 @@ class CartIndexTest extends TestCase
 			$product = factory(ProductVariation::class)->create()
 		);
 
-		$response = $this->jsonAs($user, 'GET', "api/cart")
+		$this->jsonAs($user, 'GET', "api/cart")
 			->assertJsonFragment([
 				'id' => $product->id
 			]);
