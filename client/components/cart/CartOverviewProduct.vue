@@ -10,8 +10,8 @@
 			<div class="field">
 				<div class="control">
 					<div class="select is-fullwidth">
-						<select class="is-fullwidth">
-							<option value="0">0</option>
+						<select v-model="quantity">
+							<option value="0" v-if="product.quantity">0</option>
 							<option :value="x" v-for="x in product.stock_count" :key="x" :selected="x === product.quantity">
 								{{ x }}
 							</option>
@@ -33,6 +33,16 @@
 	import { mapActions } from 'vuex';
 	export default {
 		name: 'CartOverviewProduct',
+		data () {
+			return {
+				quantity: this.product.quantity
+			}
+		},
+		watch: {
+			'quantity' (quantity) {
+				this.update({ productId: this.product.id, quantity })
+			}
+		},
 		props: {
 			product: {
 				required: true,
@@ -41,7 +51,8 @@
 		},
 		methods: {
 			...mapActions({
-				destroy: 'cart/destroy'
+				destroy: 'cart/destroy',
+				update: 'cart/update'
 			})
 		}
 	};
