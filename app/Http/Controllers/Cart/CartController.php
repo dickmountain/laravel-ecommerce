@@ -49,7 +49,9 @@ class CartController extends Controller
 	private function getMeta(Cart $cart)
 	{
 		return [
-			'empty' => $cart->isEmpty()
+			'empty' => $cart->isEmpty(),
+			'subtotal' => $cart->getSubtotal()->formatted(),
+			'total' => $cart->getTotal()->formatted(),
 		];
 	}
 }

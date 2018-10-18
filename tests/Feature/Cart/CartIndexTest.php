@@ -26,4 +26,24 @@ class CartIndexTest extends TestCase
 				'id' => $product->id
 			]);
 	}
+
+	public function test_shows_formatted_subtotal()
+	{
+		$user = factory(User::class)->create();
+
+		$this->jsonAs($user, 'GET', "api/cart")
+			->assertJsonFragment([
+				'subtotal' => '$0.00'
+			]);
+	}
+
+	public function test_shows_formatted_total()
+	{
+		$user = factory(User::class)->create();
+
+		$this->jsonAs($user, 'GET', "api/cart")
+			->assertJsonFragment([
+				'total' => '$0.00'
+			]);
+	}
 }
