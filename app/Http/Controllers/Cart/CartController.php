@@ -21,6 +21,8 @@ class CartController extends Controller
 
 	public function index(Request $request, Cart $cart)
 	{
+		$cart->sync();
+
 		$request->user()->load([
 			'cart.product', 'cart.product.variations.stock', 'cart.stock'
 		]);
@@ -34,6 +36,8 @@ class CartController extends Controller
 	public function store(CartStoreRequest $request, Cart $cart)
 	{
 		$cart->add($request->products);
+
+		$cart->sync();
     }
 
 	public function update(ProductVariation $productVariation, CartUpdateRequest $request, Cart $cart)
@@ -52,6 +56,7 @@ class CartController extends Controller
 			'empty' => $cart->isEmpty(),
 			'subtotal' => $cart->getSubtotal()->formatted(),
 			'total' => $cart->getTotal()->formatted(),
+			'changed' => $cart->hasChanged()
 		];
 	}
 }

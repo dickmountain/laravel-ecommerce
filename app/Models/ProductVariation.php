@@ -28,6 +28,11 @@ class ProductVariation extends Model
 		return $this->getStockCount() > 0;
 	}
 
+	public function getMinStock($count)
+	{
+		return min($this->getStockCount(), $count);
+	}
+
 	public function getStockCount()
 	{
 		return $this->stock->sum('pivot.stock');

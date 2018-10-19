@@ -3,11 +3,13 @@
 namespace App\Ecommerce;
 
 
+use App\Models\ProductVariation;
 use App\Models\User;
 
 class Cart
 {
 	protected $user;
+	protected $changed;
 
 	public function __construct(User $user)
 	{
@@ -54,6 +56,24 @@ class Cart
 	public function empty()
 	{
 		$this->user->cart()->detach();
+	}
+
+	public function sync()
+	{
+		$this->user->cart->each(function (ProductVariation $product) {
+			$quantity = $product->getMinStock($product->pivot->quantity);
+
+			$this->changed = $quantity != $product->pivot->quantity;
+
+			$product->pivot->update([
+				'quantity' => $quantity
+			]);
+		});
+	}
+
+	public function hasChanged()
+	{
+		return $this->changed;
 	}
 
 	public function isEmpty()
