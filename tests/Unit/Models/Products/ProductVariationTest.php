@@ -127,4 +127,17 @@ class ProductVariationTest extends TestCase
 
 		$this->assertEquals($variation->getStockCount(), $quantity);
 	}
+
+	public function test_can_get_min_stock()
+	{
+		$variation = factory(ProductVariation::class)->create();
+
+		$variation->stocks()->save(
+			factory(Stock::class)->make([
+				'quantity' => $quantity = 5
+			])
+		);
+
+		$this->assertEquals($variation->getMinStock(200), $quantity);
+	}
 }
