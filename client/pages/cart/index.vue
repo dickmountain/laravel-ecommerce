@@ -36,6 +36,7 @@
 		computed: {
 			...mapGetters({
 				empty: 'cart/empty',
+				changed: 'cart/changed',
 				products: 'cart/products'
 			})
 		}
