@@ -26,7 +26,7 @@
 				        </span>
 					</section>
 					<section class="section">
-						<form action="">
+						<form action="" @submit.prevent="add">
 							<ProductVariation
 								v-for="(variations, type) in product.variations"
 								:type="type"
@@ -60,14 +60,32 @@
 </template>
 
 <script>
-	import ProductVariation from '@/components/products/ProductVariation'
+	import { mapActions } from 'vuex';
+	import ProductVariation from '@/components/products/ProductVariation';
+
 	export default {
 		components: {
 			ProductVariation
 		},
+		methods: {
+			...mapActions({
+				store: 'cart/store'
+			}),
+			add () {
+				this.store([{
+					id: this.form.variation.id,
+					quantity: this.form.quantity
+				}]);
+
+				this.form = {
+					variation: '',
+					quantity: 1
+				}
+			}
+		},
 		watch: {
 			'form.variation' () {
-				this.form.quantity = 1
+				this.form.quantity = 1;
 			}
 		},
 		data () {
@@ -77,14 +95,14 @@
 					variation: '',
 					quantity: 1
 				}
-			}
+			};
 		},
 		async asyncData ({ params, app }) {
-			let response = await app.$axios.$get(`products/${params.slug}`)
+			let response = await app.$axios.$get(`products/${params.slug}`);
 
 			return {
 				product: response.data
-			}
+			};
 		}
 	}
 </script>
