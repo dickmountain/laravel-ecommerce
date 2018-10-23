@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Addresses;
 
+use App\Http\Requests\Addresses\AddressStoreRequest;
 use App\Http\Resources\AddressResource;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -18,5 +20,16 @@ class AddressController extends Controller
 		return AddressResource::collection(
 			$request->user()->addresses
 		);
+    }
+
+	public function store(AddressStoreRequest $request)
+	{
+		$address = Address::make($request->only([
+			'name', 'address', 'city', 'postal_code', 'country_id'
+		]));
+
+		$request->user()->addresses()->save($address);
+
+		return new AddressResource($address);
     }
 }
