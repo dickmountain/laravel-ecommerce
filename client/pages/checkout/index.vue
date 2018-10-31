@@ -3,11 +3,7 @@
 		<div class="container is-fluid">
 			<div class="columns">
 				<div class="column is-three-quarters">
-					<article class="message">
-						<div class="message-body">
-							<h1 class="title is-5">Ship to</h1>
-						</div>
-					</article>
+					<ShippingAddress :addresses="addresses"/>
 
 					<article class="message">
 						<div class="message-body">
@@ -87,20 +83,33 @@
 </template>
 
 <script>
-	import { mapGetters } from 'vuex'
-	import CartOverview from "@/components/cart/CartOverview"
+	import { mapGetters } from 'vuex';
+	import CartOverview from "@/components/cart/CartOverview";
+	import ShippingAddress from "@/components/checkout/addresses/ShippingAddress";
 
 	export default {
 		name: 'index',
 		components: {
-			CartOverview
+			CartOverview,
+			ShippingAddress
 		},
-		...mapGetters({
-			total: 'cart/total',
-			products: 'cart/products',
-			empty: 'cart/empty',
-		})
-	}
+		data () {
+			return {
+				addresses: []
+			}
+		},
+		computed: {
+			...mapGetters({
+				total: 'cart/total',
+				products: 'cart/products',
+				empty: 'cart/empty',
+			})
+		},
+		async asyncData ({ app }) {
+			let addresses = await app.$axios.$get('addresses');
+
+		}
+	};
 </script>
 
 <style scoped>
