@@ -4,7 +4,10 @@
 			<h1 class="title is-5">Ship to</h1>
 
 			<template v-if="selecting">
-				<ShippingAddressSelector :addresses="addresses" :selectedAddress="selectedAddress" @click.pervent="switchAddress"/>
+				<ShippingAddressSelector :addresses="addresses" :selectedAddress="selectedAddress" @click.prevent="addressSelected"/>
+			</template>
+			<template v-else-if="creating">
+				<ShippingAddressCreator @cancel="creating = false" @created="created"/>
 			</template>
 			<template v-else>
 				<template v-if="selectedAddress">
@@ -16,7 +19,10 @@
 
 				<div class="field is-grouped">
 					<p class="control">
-						<a href="" class="button is-info" @click="selecting = true">Changing shipping address</a>
+						<a href="" class="button is-info" @click.prevent="selecting = true">Changing shipping address</a>
+					</p>
+					<p class="control">
+						<a href="" class="button is-info" @click.prevent="creating = true">Add an address</a>
 					</p>
 				</div>
 			</template>
@@ -26,17 +32,19 @@
 </template>
 
 <script>
-	import ShippingAddressSelector from '@/components/checkout/ShippingAddressSelector'
+	import ShippingAddressSelector from './ShippingAddressSelector'
+	import ShippingAddressCreator from './ShippingAddressCreator'
 
 	export default {
 		name: 'ShippingAddress',
 		components: {
-			ShippingAddressSelector
+			ShippingAddressSelector,
+			ShippingAddressCreator
 		},
 		data () {
 			return {
 				selecting: false,
-				created: false,
+				creating: false,
 				localAddresses: this.addresses,
 				selectedAddress: null
 			};
@@ -61,6 +69,12 @@
 			},
 			switchAddress (address) {
 				this.selectedAddress = address;
+			},
+			created (address) {
+				this.localAddresses.push(address);
+				this.creating = false;
+
+				this.switchAddress(address);
 			}
 		},
 		created () {
