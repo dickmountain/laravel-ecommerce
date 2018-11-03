@@ -3,8 +3,22 @@
 		<div class="message-body">
 			<h1 class="title is-5">Ship to</h1>
 
-			<template v-if="selectedAddress">
-				{{ selectedAddress.name }}
+			<template v-if="selecting">
+				<ShippingAddressSelector :addresses="addresses" :selectedAddress="selectedAddress" @click.pervent="switchAddress"/>
+			</template>
+			<template v-else>
+				<template v-if="selectedAddress">
+					<p>
+						{{ selectedAddress.name }}
+					</p>
+					<br>
+				</template>
+
+				<div class="field is-grouped">
+					<p class="control">
+						<a href="" class="button is-info" @click="selecting = true">Changing shipping address</a>
+					</p>
+				</div>
 			</template>
 
 		</div>
@@ -12,10 +26,17 @@
 </template>
 
 <script>
+	import ShippingAddressSelector from '@/components/checkout/ShippingAddressSelector'
+
 	export default {
 		name: 'ShippingAddress',
+		components: {
+			ShippingAddressSelector
+		},
 		data () {
 			return {
+				selecting: false,
+				created: false,
 				localAddresses: this.addresses,
 				selectedAddress: null
 			};
@@ -34,8 +55,12 @@
 			}
 		},
 		methods: {
+			addressSelected (address) {
+				this.switchAddress(address);
+				this.selecting = false;
+			},
 			switchAddress (address) {
-				this.selectedAddress = address
+				this.selectedAddress = address;
 			}
 		},
 		created () {
