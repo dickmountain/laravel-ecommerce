@@ -35,9 +35,7 @@
 					<label class="label">Country</label>
 					<div class="select is-fullwidth">
 						<div class="control">
-							<select v-model="form.country_id">
-								<option value="1">Afganistan</option>
-							</select>
+							<CountryDropdown v-model="form.country_id"/>
 						</div>
 					</div>
 				</div>
@@ -56,8 +54,13 @@
 </template>
 
 <script>
+	import CountryDropdown from '@/components/form/CountryDropdown';
+
 	export default {
 		name: 'ShippingAddressCreator',
+		components: {
+			CountryDropdown
+		},
 		data () {
 			return {
 				form: {
@@ -74,7 +77,7 @@
 			async store () {
 				let response = await this.$axios.$post('addresses', this.form);
 
-				this.$emit('created', response.data)
+				this.$emit('created', response.data);
 			}
 		}
 	};
