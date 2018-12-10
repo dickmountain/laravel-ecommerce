@@ -29,7 +29,7 @@ class CartController extends Controller
 
 		return (new CartResource($request->user()))
 			->additional([
-				'meta' => $this->getMeta($cart)
+				'meta' => $this->getMeta($cart, $request)
 			]);
 	}
 	
@@ -50,12 +50,12 @@ class CartController extends Controller
 		$cart->delete($productVariation->id);
 	}
 
-	private function getMeta(Cart $cart)
+	private function getMeta(Cart $cart, Request $request)
 	{
 		return [
 			'empty' => $cart->isEmpty(),
-			'subtotal' => $cart->getSubtotal()->formatted(),
-			'total' => $cart->getTotal()->formatted(),
+			'subtotal' => $cart->getSubtotal()->getFormattedAmount(),
+			'total' => $cart->withShipping($request->shipping_method_id)->getTotal()->getFormattedAmount(),
 			'changed' => $cart->hasChanged()
 		];
 	}

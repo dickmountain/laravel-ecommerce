@@ -5,6 +5,7 @@ namespace Tests\Unit\Cart;
 use App\Ecommerce\Cart;
 use App\Ecommerce\Money;
 use App\Models\ProductVariation;
+use App\Models\ShippingMethod;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -170,5 +171,45 @@ class CartTest extends TestCase
 		$cart->sync();
 
 		$this->assertTrue($cart->hasChanged());
+	}
+
+	public function test_return_correct_total_without_shipping()
+	{
+		$cart = new Cart(
+			$user = factory(User::class)->create()
+		);
+
+		$user->cart()->attach(
+			$product = factory(ProductVariation::class)->create([
+				'price' => $price = 1000
+			]), [
+				'quantity' => $quantity = 2
+			]
+		);
+
+		$this->assertEquals($cart->getTotal()->getAmount(), $price*$quantity);
+	}
+
+	public function test_return_correct_total_with_shipping()
+	{
+		$cart = new Cart(
+			$user = factory(User::class)->create()
+		);
+
+		$shippingMethod = factory(ShippingMethod::class)->create([
+			'price' => $shippingMethodPrice = 1000
+		]);
+
+		$user->cart()->attach(
+			$product = factory(ProductVariation::class)->create([
+				'price' => $price = 1000
+			]), [
+				'quantity' => $quantity = 2
+			]
+		);
+
+		$cart->withShipping($shippingMethod->id);
+
+		$this->assertEquals($cart->getTotal()->getAmount(), $price*$quantity+$shippingMethodPrice);
 	}
 }

@@ -14,6 +14,6 @@ trait HasPrice
 
 	public function getFormattedPriceAttribute()
 	{
-		return $this->price->formatted();
+		return $this->price->getFormattedAmount();
 	}
 }

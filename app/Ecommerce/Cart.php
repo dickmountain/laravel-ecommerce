@@ -4,16 +4,25 @@ namespace App\Ecommerce;
 
 
 use App\Models\ProductVariation;
+use App\Models\ShippingMethod;
 use App\Models\User;
 
 class Cart
 {
 	protected $user;
 	protected $changed;
+	protected $shipping;
 
 	public function __construct(User $user)
 	{
 		$this->user = $user;
+	}
+
+	public function withShipping($shippingMethodId)
+	{
+		$this->shipping = ShippingMethod::find($shippingMethodId);
+
+		return $this;
 	}
 
 	public function add($products)
@@ -92,6 +101,10 @@ class Cart
 
 	public function getTotal()
 	{
+		if ($this->shipping) {
+			return $this->getSubtotal()->add($this->shipping->price);
+		}
+
 		return $this->getSubtotal();
 	}
 }

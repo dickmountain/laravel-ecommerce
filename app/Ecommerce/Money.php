@@ -22,7 +22,7 @@ class Money
 		return $this->money->getAmount();
 	}
 
-	public function formatted()
+	public function getFormattedAmount()
 	{
 		$formatter = new IntlMoneyFormatter(
 			new NumberFormatter('en_US', NumberFormatter::CURRENCY),
@@ -30,5 +30,17 @@ class Money
 		);
 
 		return $formatter->format($this->money);
+	}
+
+	public function add(Money $money)
+	{
+		$this->money = $this->money->add($money->getInstance());
+
+		return $this;
+	}
+
+	public function getInstance()
+	{
+		return $this->money;
 	}
 }

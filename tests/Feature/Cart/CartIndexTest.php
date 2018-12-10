@@ -3,6 +3,7 @@
 namespace Tests\Feature\Cart;
 
 use App\Models\ProductVariation;
+use App\Models\ShippingMethod;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -60,6 +61,20 @@ class CartIndexTest extends TestCase
 		$this->jsonAs($user, 'GET', "api/cart")
 			->assertJsonFragment([
 				'changed' => true
+			]);
+	}
+
+	public function test_shows_formatted_total_with_shipping()
+	{
+		$user = factory(User::class)->create();
+
+		$shippingMethod = factory(ShippingMethod::class)->create([
+			'price' => 1000
+		]);
+
+		$this->jsonAs($user, 'GET', "api/cart?shipping_method_id=$shippingMethod->id")
+			->assertJsonFragment([
+				'total' => '$10.00'
 			]);
 	}
 }
