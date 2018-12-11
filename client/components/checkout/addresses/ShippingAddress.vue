@@ -11,9 +11,8 @@
 			</template>
 			<template v-else>
 				<template v-if="selectedAddress">
-					<p>
-						{{ selectedAddress.name }}
-					</p>
+					<p>{{ selectedAddress.address }}, {{ selectedAddress.country.name }}</p>
+					<p>{{ selectedAddress.name }}</p>
 					<br>
 				</template>
 
@@ -84,7 +83,7 @@
 		},
 		created () {
 			if (this.addresses.length) {
-				this.selectedAddress(this.defaultAddress);
+				this.switchAddress(this.defaultAddress);
 			}
 		}
 	};
