@@ -10,6 +10,22 @@ use Tests\TestCase;
 
 class OrderTest extends TestCase
 {
+	public function test_has_default_status()
+	{
+		$user = factory(User::class)->create();
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'address_id' => $address->id
+		]);
+
+		$this->assertEquals($order->status, Order::PENDING);
+	}
+
 	public function test_belongs_to_user()
     {
     	$user = factory(User::class)->create();
