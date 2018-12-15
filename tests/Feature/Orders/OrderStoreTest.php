@@ -3,6 +3,8 @@
 namespace Tests\Feature\Orders;
 
 use App\Models\Address;
+use App\Models\Country;
+use App\Models\ShippingMethod;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -58,6 +60,22 @@ class OrderStoreTest extends TestCase
 
 		$this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => 1
+		])->assertJsonValidationErrors(['shipping_method_id']);
+	}
+
+	public function test_requires_valid_shipping_method()
+	{
+		$user = factory(User::class)->create();
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shippingMethod = factory(ShippingMethod::class)->create();
+
+		$this->jsonAs($user, 'POST', 'api/orders', [
+			'shipping_method_id' => $shippingMethod->id,
+			'address_id' => $address->id
 		])->assertJsonValidationErrors(['shipping_method_id']);
 	}
 }
