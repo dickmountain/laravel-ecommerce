@@ -4,7 +4,9 @@ namespace Tests\Feature\Orders;
 
 use App\Models\Address;
 use App\Models\Country;
+use App\Models\ProductVariation;
 use App\Models\ShippingMethod;
+use App\Models\Stock;
 use App\Models\User;
 use Tests\TestCase;
 
@@ -99,6 +101,34 @@ class OrderStoreTest extends TestCase
 			'user_id' => $user->id,
 			'address_id' => $address->id,
 			'shipping_method_id' => $shipping->id,
+		]);
+	}
+
+	public function test_attaches_products_to_order()
+	{
+		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
+		$this->jsonAs($user, 'POST', 'api/orders', [
+			'shipping_method_id' => $shipping->id,
+			'address_id' => $address->id
+		]);
+
+		$this->assertDatabaseHas('product_variation_order', [
+			'product_variation_id' => $product->id
 		]);
 	}
 }

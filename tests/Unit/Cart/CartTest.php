@@ -190,7 +190,7 @@ class CartTest extends TestCase
 		$this->assertEquals($cart->getTotal()->getAmount(), $price*$quantity);
 	}
 
-	public function test_return_correct_total_with_shipping()
+	public function test_returns_correct_total_with_shipping()
 	{
 		$cart = new Cart(
 			$user = factory(User::class)->create()
@@ -211,5 +211,22 @@ class CartTest extends TestCase
 		$cart->withShipping($shippingMethod->id);
 
 		$this->assertEquals($cart->getTotal()->getAmount(), $price*$quantity+$shippingMethodPrice);
+	}
+
+	public function test_returns_products_in_cart()
+	{
+		$cart = new Cart(
+			$user = factory(User::class)->create()
+		);
+
+		$user->cart()->attach(
+			$product = factory(ProductVariation::class)->create([
+				'price' => $price = 1000
+			]), [
+				'quantity' => $quantity = 2
+			]
+		);
+
+		$this->assertInstanceOf(ProductVariation::class, $cart->products()->first());
 	}
 }
