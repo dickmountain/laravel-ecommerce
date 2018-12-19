@@ -131,4 +131,32 @@ class OrderStoreTest extends TestCase
 			'product_variation_id' => $product->id
 		]);
 	}
+
+	public function test_fails_to_create_order_on_empty_cart()
+	{
+		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync([
+			$product->id => [
+				'quantity' => 0
+			]
+		]);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
+		$this->jsonAs($user, 'POST', 'api/orders', [
+			'shipping_method_id' => $shipping->id,
+			'address_id' => $address->id
+		])->assertStatus(400);
+	}
 }
