@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Ecommerce\Money;
+use App\Models\Collections\ProductVariationCollection;
 use App\Models\Traits\HasPrice;
 use Illuminate\Database\Eloquent\Model;
 
@@ -57,5 +58,10 @@ class ProductVariation extends Model
 	{
 		return $this->belongsToMany(ProductVariation::class, 'product_variation_stock_view')
 			->withPivot(['stock', 'in_stock']);
+	}
+
+	public function newCollection(array $models = [])
+	{
+		return new ProductVariationCollection($models);
 	}
 }
