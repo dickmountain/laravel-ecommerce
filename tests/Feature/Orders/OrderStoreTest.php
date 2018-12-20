@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Orders;
 
+use App\Events\Order\OrderCreatedEvent;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\ProductVariation;
 use App\Models\ShippingMethod;
 use App\Models\Stock;
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class OrderStoreTest extends TestCase
@@ -158,5 +160,59 @@ class OrderStoreTest extends TestCase
 			'shipping_method_id' => $shipping->id,
 			'address_id' => $address->id
 		])->assertStatus(400);
+	}
+
+	public function test_fires_order_created_event()
+	{
+		Event::fake();
+
+		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
+		$this->jsonAs($user, 'POST', 'api/orders', [
+			'shipping_method_id' => $shipping->id,
+			'address_id' => $address->id
+		]);
+
+		Event::assertDispatched(OrderCreatedEvent::class);
+	}
+
+	public function test_empties_cart_when_ordering()
+	{
+		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
+		$this->jsonAs($user, 'POST', 'api/orders', [
+			'shipping_method_id' => $shipping->id,
+			'address_id' => $address->id
+		]);
+
+		$this->assertEmpty($user->cart);
 	}
 }

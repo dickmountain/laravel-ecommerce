@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Orders;
 
 use App\Ecommerce\Cart;
+use App\Events\Order\OrderCreatedEvent;
 use App\Http\Requests\Orders\OrderStoreRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -23,6 +24,8 @@ class OrderController extends Controller
 		$order = $this->createOrder($request, $cart);
 
 		$order->products()->sync($cart->products()->forSyncing());
+
+		event(new OrderCreatedEvent($order));
     }
 
     protected function createOrder(Request $request, Cart $cart)
