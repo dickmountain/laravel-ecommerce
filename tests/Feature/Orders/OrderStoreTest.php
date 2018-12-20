@@ -124,13 +124,14 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
-		$this->jsonAs($user, 'POST', 'api/orders', [
+		$response = $this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
 			'address_id' => $address->id
 		]);
 
 		$this->assertDatabaseHas('product_variation_order', [
-			'product_variation_id' => $product->id
+			'product_variation_id' => $product->id,
+			'order_id' => json_decode($response->getContent())->data->id
 		]);
 	}
 
@@ -182,12 +183,14 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
-		$this->jsonAs($user, 'POST', 'api/orders', [
+		$response = $this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
 			'address_id' => $address->id
 		]);
 
-		Event::assertDispatched(OrderCreatedEvent::class);
+		Event::assertDispatched(OrderCreatedEvent::class, function ($event) use ($response) {
+			return $event->order->id === json_decode($response->getContent())->data->id;
+		});
 	}
 
 	public function test_empties_cart_when_ordering()
