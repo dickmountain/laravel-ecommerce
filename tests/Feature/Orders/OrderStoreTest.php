@@ -87,6 +87,13 @@ class OrderStoreTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
 		$address = factory(Address::class)->create([
 			'user_id' => $user->id
 		]);
