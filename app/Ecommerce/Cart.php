@@ -13,7 +13,7 @@ class Cart
 	protected $changed;
 	protected $shipping;
 
-	public function __construct(User $user)
+	public function __construct(?User $user)
 	{
 		$this->user = $user;
 	}
@@ -92,7 +92,7 @@ class Cart
 
 	public function isEmpty()
 	{
-		return $this->user->cart->sum('pivot.quantity') === 0;
+		return $this->user->cart->sum('pivot.quantity') <= 0;
 	}
 
 	public function getSubtotal()

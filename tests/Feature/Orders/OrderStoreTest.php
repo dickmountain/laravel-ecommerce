@@ -24,6 +24,20 @@ class OrderStoreTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
 		$this->jsonAs($user, 'POST', 'api/orders')
 			->assertJsonValidationErrors(['address_id']);
 	}
@@ -31,6 +45,20 @@ class OrderStoreTest extends TestCase
 	public function test_requires_address_that_exists()
 	{
 		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
 
 		$this->jsonAs($user, 'POST', 'api/orders', [
 			'address_id' => 1
@@ -40,6 +68,20 @@ class OrderStoreTest extends TestCase
 	public function test_requires_address_that_belongs_to_authenticated_user()
 	{
 		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
 
 		$address = factory(Address::class)->create([
 			'user_id' => factory(User::class)->create()->id
@@ -54,6 +96,20 @@ class OrderStoreTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
 		$this->jsonAs($user, 'POST', 'api/orders')
 			->assertJsonValidationErrors(['shipping_method_id']);
 	}
@@ -61,6 +117,20 @@ class OrderStoreTest extends TestCase
 	public function test_requires_shipping_method_that_exists()
 	{
 		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
 
 		$this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => 1
