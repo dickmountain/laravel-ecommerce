@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models\Orders;
 
+use App\Ecommerce\Money;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\ProductVariation;
@@ -117,5 +118,57 @@ class OrderTest extends TestCase
 		);
 
 		$this->assertEquals($order->products->first()->pivot->quantity, $quantity);
+	}
+
+	public function test_returns_money_instance_for_subtotal()
+	{
+		$user = factory(User::class)->create();
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'address_id' => $address->id
+		]);
+
+		$this->assertInstanceOf(Money::class, $order->subtotal);
+	}
+
+	public function test_returns_money_instance_for_total()
+	{
+		$user = factory(User::class)->create();
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'address_id' => $address->id
+		]);
+
+		$this->assertInstanceOf(Money::class, $order->getTotal());
+	}
+
+	public function test_adds_shipping_to_total()
+	{
+		$user = factory(User::class)->create();
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$order = factory(Order::class)->create([
+			'user_id' => $user->id,
+			'address_id' => $address->id,
+			'subtotal' => 1000,
+			'shipping_method_id' => factory(ShippingMethod::class)->create([
+				'price' => 1000
+			])
+		]);
+
+		$this->assertEquals($order->getTotal()->getAmount(), 2000);
 	}
 }
