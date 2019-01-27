@@ -11,7 +11,7 @@
 
 				<nuxt-link :to="{
 					name: 'products-slug',
-					params: {
+					 params: {
 						slug: variation.product.slug
 					}
 				}">
