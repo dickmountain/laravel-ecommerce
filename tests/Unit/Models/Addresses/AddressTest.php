@@ -27,7 +27,7 @@ class AddressTest extends TestCase
 		$this->assertInstanceOf(User::class, $address->user);
 	}
 
-	public function test_sets_all_addresses_to_not_default()
+	public function test_sets_old_addresses_to_not_default_when_creating()
 	{
 		$user = factory(User::class)->create();
 
