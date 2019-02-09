@@ -4,7 +4,7 @@
 			<h1 class="title is-5">Ship to</h1>
 
 			<template v-if="selecting">
-				<ShippingAddressSelector :addresses="addresses" :selectedAddress="selectedAddress" @click.prevent="addressSelected"/>
+				<ShippingAddressSelector :addresses="addresses" :selectedAddress="selectedAddress" @click="addressSelected"/>
 			</template>
 			<template v-else-if="creating">
 				<ShippingAddressCreator @cancel="creating = false" @created="created"/>

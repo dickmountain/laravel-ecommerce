@@ -1,7 +1,7 @@
 <template>
 	<table class="table is-hoverable is-fullwidth">
 		<tbody>
-			<tr v-for="address in addresses" :key="address.key">
+			<tr v-for="address in addresses" :key="address.id">
 				<td>
 					<p :class="{ 'has-text-weight-bold': address.id === selectedAddress.id }">
 						{{ address.name }} <br>

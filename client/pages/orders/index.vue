@@ -1,6 +1,5 @@
 <template>
 	<div class="section">
-		{{ orders }}
 		<div class="container is-fluid">
 			<div class="columns">
 				<div class="column is-12">
