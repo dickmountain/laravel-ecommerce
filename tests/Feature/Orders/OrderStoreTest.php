@@ -5,6 +5,7 @@ namespace Tests\Feature\Orders;
 use App\Events\Order\OrderCreatedEvent;
 use App\Models\Address;
 use App\Models\Country;
+use App\Models\PaymentMethod;
 use App\Models\ProductVariation;
 use App\Models\ShippingMethod;
 use App\Models\Stock;
@@ -159,6 +160,59 @@ class OrderStoreTest extends TestCase
 		])->assertJsonValidationErrors(['shipping_method_id']);
 	}
 
+	public function test_requires_payment_method()
+	{
+		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
+		$this->jsonAs($user, 'POST', 'api/orders')
+			->assertJsonValidationErrors(['payment_method_id']);
+	}
+
+	public function test_requires_payment_method_that_belongs_to_authenticated_user()
+	{
+		$user = factory(User::class)->create();
+
+		$product = factory(ProductVariation::class)->create();
+		factory(Stock::class)->create([
+			'product_variation_id' => $product->id
+		]);
+
+		$user->cart()->sync($product);
+
+		$address = factory(Address::class)->create([
+			'user_id' => $user->id
+		]);
+
+		$shipping = factory(ShippingMethod::class)->create();
+		$shipping->countries()->attach($address->country);
+
+		factory(Address::class)->create([
+			'user_id' =>  $user->id
+		]);
+
+		$paymentMethod = factory(PaymentMethod::class)->create([
+			'user_id' => factory(User::class)->create()->id
+		]);
+
+		$this->jsonAs($user, 'POST', 'api/orders', [
+			'payment_method_id' => $paymentMethod->id
+		])->assertJsonValidationErrors(['payment_method_id']);
+	}
+
 	public function test_can_create_order()
 	{
 		$user = factory(User::class)->create();
@@ -177,8 +231,13 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
+		$paymentMethod = factory(PaymentMethod::class)->create([
+			'user_id' => $user->id
+		]);
+
 		$this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
+			'payment_method_id' => $paymentMethod->id,
 			'address_id' => $address->id
 		]);
 
@@ -186,6 +245,7 @@ class OrderStoreTest extends TestCase
 			'user_id' => $user->id,
 			'address_id' => $address->id,
 			'shipping_method_id' => $shipping->id,
+			'payment_method_id' => $paymentMethod->id,
 		]);
 	}
 
@@ -207,8 +267,13 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
+		$paymentMethod = factory(PaymentMethod::class)->create([
+			'user_id' => $user->id
+		]);
+
 		$response = $this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
+			'payment_method_id' => $paymentMethod->id,
 			'address_id' => $address->id
 		]);
 
@@ -240,8 +305,13 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
+		$paymentMethod = factory(PaymentMethod::class)->create([
+			'user_id' => $user->id
+		]);
+
 		$this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
+			'payment_method_id' => $paymentMethod->id,
 			'address_id' => $address->id
 		])->assertStatus(400);
 	}
@@ -266,8 +336,13 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
+		$paymentMethod = factory(PaymentMethod::class)->create([
+			'user_id' => $user->id
+		]);
+
 		$response = $this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
+			'payment_method_id' => $paymentMethod->id,
 			'address_id' => $address->id
 		]);
 
@@ -294,8 +369,13 @@ class OrderStoreTest extends TestCase
 		$shipping = factory(ShippingMethod::class)->create();
 		$shipping->countries()->attach($address->country);
 
+		$paymentMethod = factory(PaymentMethod::class)->create([
+			'user_id' => $user->id
+		]);
+
 		$this->jsonAs($user, 'POST', 'api/orders', [
 			'shipping_method_id' => $shipping->id,
+			'payment_method_id' => $paymentMethod->id,
 			'address_id' => $address->id
 		]);
 
