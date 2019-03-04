@@ -22,7 +22,7 @@ class StripeGateway implements Gateway
 		return $this->user;
 	}
 
-	public function createCustomer()
+	public function createCustomer(): StripeGatewayCustomer
 	{
 		if ($this->user->gateway_customer_id) {
 			return $this->getStripeCustomer();
