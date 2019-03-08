@@ -5,10 +5,10 @@ namespace App\Ecommerce\Payments\Gateways;
 use App\Ecommerce\Payments\GatewayCustomer;
 use App\Models\PaymentMethod;
 use Stripe\Customer as StripeCustomer;
+use Stripe\Charge as StripeCharge;
 
 class StripeGatewayCustomer implements GatewayCustomer
 {
-
 	protected $gateway;
 	protected $customer;
 
@@ -20,7 +20,12 @@ class StripeGatewayCustomer implements GatewayCustomer
 
 	public function charge(PaymentMethod $paymentMethod, $amount)
 	{
-		// TODO: Implement charge() method.
+		StripeCharge::create([
+			'currency' => 'usd',
+			'amount' => $amount,
+			'customer' => $this->customer->id,
+			'source' => $paymentMethod->provider_id
+		]);
 	}
 
 	public function addCart($token)

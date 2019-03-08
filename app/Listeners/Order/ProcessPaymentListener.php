@@ -28,6 +28,10 @@ class ProcessPaymentListener implements ShouldQueue
      */
     public function handle(OrderCreatedEvent $event)
     {
+		$order = $event->order;
 
+	    $this->gateway->withUser($order->user)
+		    ->getCustomer()
+		    ->charge($order->paymentMethod(), $order->getTotal()->getAmount());
     }
 }
