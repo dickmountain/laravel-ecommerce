@@ -140,7 +140,6 @@
 		},
 		watch: {
 			'form.address_id' (addressId) {
-				console.log(addressId);
 				this.getShippingMethodsForAddress(addressId).then(() => {
 					this.setShipping(this.shippingMethods[0]);
 				});
