@@ -5,13 +5,16 @@
 
 			<template v-if="selecting">
 				<PaymentMethodSelector
-						:payment-methods="paymentMethods"
-						:selected-payment-method="selectedPaymentMethod"
-						@click="paymentMethodSelected"
+					:payment-methods="paymentMethods"
+					:selected-payment-method="selectedPaymentMethod"
+					@click="paymentMethodSelected"
 				/>
 			</template>
 			<template v-else-if="creating">
-				Create Payment Method
+				<PaymentMethodCreator
+					@cancel="creating = false"
+					@added="created"
+				/>
 			</template>
 			<template v-else>
 				<template v-if="selectedPaymentMethod">
@@ -20,7 +23,7 @@
 				</template>
 
 				<div class="field is-grouped">
-					<p class="control">
+					<p class="control" v-if="paymentMethods.length">
 						<a href="" class="button is-info" @click.prevent="selecting = true">Changing a payment method</a>
 					</p>
 					<p class="control">
@@ -35,11 +38,13 @@
 
 <script>
 	import PaymentMethodSelector from './PaymentMethodSelector'
+	import PaymentMethodCreator from './PaymentMethodCreator'
 
 	export default {
 		name: 'PaymentMethods',
 		components: {
-			PaymentMethodSelector
+			PaymentMethodSelector,
+			PaymentMethodCreator
 		},
 		data () {
 			return {
