@@ -37,7 +37,7 @@ class ProcessPaymentListener implements ShouldQueue
 			$this->gateway->withUser($order->user)
 				->getCustomer()
 				->charge(
-					$order->paymentMethod(), $order->getTotal()->getAmount()
+					$order->paymentMethod, $order->getTotal()->getAmount()
 				);
 
 			event(new OrderPaidEvent($order));

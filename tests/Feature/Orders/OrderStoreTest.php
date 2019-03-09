@@ -11,6 +11,7 @@ use App\Models\ShippingMethod;
 use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Support\Facades\Event;
+use Stripe\Customer;
 use Tests\TestCase;
 
 class OrderStoreTest extends TestCase
@@ -253,6 +254,14 @@ class OrderStoreTest extends TestCase
 	{
 		$user = factory(User::class)->create();
 
+		$stripeCustomer = Customer::create([
+			'email' => $user->email,
+		]);
+
+		$user->update([
+			'gateway_customer_id' => $stripeCustomer->id
+		]);
+
 		$product = factory(ProductVariation::class)->create();
 		factory(Stock::class)->create([
 			'product_variation_id' => $product->id
@@ -354,6 +363,14 @@ class OrderStoreTest extends TestCase
 	public function test_empties_cart_when_ordering()
 	{
 		$user = factory(User::class)->create();
+
+		$stripeCustomer = Customer::create([
+			'email' => $user->email,
+		]);
+
+		$user->update([
+			'gateway_customer_id' => $stripeCustomer->id
+		]);
 
 		$product = factory(ProductVariation::class)->create();
 		factory(Stock::class)->create([
