@@ -11,7 +11,7 @@ class MarkOrderProcessingListener
     /**
      * Handle the event.
      *
-     * @param  OrderCreatedEvent  $event
+     * @param $event
      * @return void
      */
     public function handle($event)

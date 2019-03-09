@@ -24,10 +24,9 @@ class EmptyCartListener
     /**
      * Handle the event.
      *
-     * @param  OrderCreatedEvent  $event
      * @return void
      */
-    public function handle(OrderCreatedEvent $event)
+    public function handle()
     {
         $this->cart->empty();
     }
