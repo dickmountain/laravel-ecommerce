@@ -4,6 +4,7 @@ namespace App\Listeners\Order;
 
 use App\Ecommerce\Payments\Gateway;
 use App\Events\Order\OrderCreatedEvent;
+use App\Events\Order\OrderPaidEvent;
 use App\Events\Order\OrderPaymentFailedEvent;
 use App\Exceptions\PaymentFailedException;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -38,6 +39,8 @@ class ProcessPaymentListener implements ShouldQueue
 				->charge(
 					$order->paymentMethod(), $order->getTotal()->getAmount()
 				);
+
+			event(new OrderPaidEvent($order));
 		} catch (PaymentFailedException $e) {
 			event(new OrderPaymentFailedEvent($order));
 		}
