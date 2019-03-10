@@ -103,6 +103,9 @@
 				}
 			}
 		},
+		middleware: [
+			'redirectIfGuest'
+		],
 		methods: {
 			...mapActions({
 				setShipping: 'cart/setShipping',

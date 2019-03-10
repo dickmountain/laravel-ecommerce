@@ -44,11 +44,19 @@
 				}
 			}
 		},
+		middleware: [
+			'redirectIfAuth'
+		],
 		methods: {
 			async login () {
 				await this.$auth.loginWith('local', {
 					data: this.form
 				})
+
+				if (this.$route.query.redirect) {
+					this.$router.replace(this.$route.query.redirect);
+					return;
+				}
 
 				this.$router.replace({
 					name: 'index'
