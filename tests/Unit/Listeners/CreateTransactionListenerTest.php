@@ -3,9 +3,7 @@
 namespace Tests\Unit\Listeners;
 
 use App\Events\Order\OrderPaidEvent;
-use App\Events\Order\OrderPaymentFailedEvent;
 use App\Listeners\Order\CreateTransactionListener;
-use App\Listeners\Order\MarkOrderPaymentFailedListener;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\User;
